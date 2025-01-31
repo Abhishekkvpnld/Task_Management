@@ -2,13 +2,13 @@ import { CiSearch } from "react-icons/ci";
 
 const HomeMenu = () => {
   return (
-    <div className="flex items-center justify-between px-6 mt-1">
+    <div className="flex items-center w-full justify-between px-6 mt-1">
       <div className="flex items-center gap-2">
         <h6 className="text-slate-500">Filter by:</h6>
         <select
           name=""
           id=""
-          className=" border-slate-400 border-2 text-slate-500 px-2 py-1 rounded-full"
+          className=" border-slate-400 border-2 hover:border-black hover:bg-slate-100 text-sm py-1 hover:text-black text-slate-500 px-2  rounded-full"
         >
           <option disabled value="">
             Category
@@ -20,7 +20,7 @@ const HomeMenu = () => {
         <select
           name=""
           id=""
-          className=" border-slate-400 border-2 text-slate-500 px-2 py-1 rounded-full"
+          className=" border-slate-400 border-2 hover:bg-slate-100 hover:text-black hover:border-black text-slate-500 px-2 text-sm py-1 rounded-full"
         >
           <option disabled value="">
             Due Date

@@ -4,7 +4,11 @@ import { CiGrid41 } from "react-icons/ci";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { useState } from "react";
 
-const Navbar = () => {
+type Props = {
+  setList: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const Navbar = ({ setList }: Props) => {
   const [profile, setProfile] = useState<boolean>(false);
 
   const user = true;
@@ -18,14 +22,20 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center justify-between gap-3 text-[#2F2F2F]">
-          <div className="flex items-center justify-center gap-1">
+          <div
+            onClick={() => setList(true)}
+            className="flex items-center justify-center gap-1 hover:scale-105 transition-all cursor-pointer"
+          >
             <CiGrid2H />
-            <h5 className="text-sm font-semibold text-slate-600">List</h5>
+            <h5 className="text-sm font-semibold text-slate-600 hover:text-black">List</h5>
           </div>
 
-          <div className="flex items-center justify-center gap-1">
+          <div
+            onClick={() => setList(false)}
+            className="flex items-center justify-center gap-1 hover:scale-105 transition-all cursor-pointer"
+          >
             <CiGrid41 />
-            <h4 className="text-sm font-semibold text-slate-600">Board</h4>
+            <h4 className="text-sm font-semibold text-slate-600 hover:text-black">Board</h4>
           </div>
         </div>
       </div>
