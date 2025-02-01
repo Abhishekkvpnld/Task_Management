@@ -1,6 +1,23 @@
 import { LuClipboardList } from "react-icons/lu";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth } from "../firebase/config";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const handleGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      navigate("/");
+      toast.success("Logged In Successfully...✅");
+    } catch (error) {
+      console.error("Login Error:", error?.message);
+    }
+  };
+
   return (
     <div className="w-[100vw] flex items-center justify-between h-[100vh] bg-[#FFF9F9] p-6">
       <div className="flex-1 h-full flex flex-col justify-center gap-5 max-w-[30%] px-6">
@@ -16,7 +33,10 @@ const Login = () => {
             illum nesciunt{" "}
           </p>
         </div>
-        <button className="w-50% border border-black py-2 flex items-center justify-center gap-2 rounded-2xl bg-black font-semibold text-white">
+        <button
+          onClick={handleGoogle}
+          className="w-50% border border-black py-2 flex items-center justify-center gap-2 rounded-2xl bg-black font-semibold text-white"
+        >
           {" "}
           <img src="/google.png" className="w-7" alt="img" /> Continue with
           Google

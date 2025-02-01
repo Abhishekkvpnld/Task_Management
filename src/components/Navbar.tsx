@@ -3,15 +3,34 @@ import { CiGrid2H } from "react-icons/ci";
 import { CiGrid41 } from "react-icons/ci";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/userContext";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase/config";
+import toast from "react-hot-toast";
 
 type Props = {
   setList: React.Dispatch<React.SetStateAction<boolean>>;
+  list: boolean;
 };
 
-const Navbar = ({ setList }: Props) => {
+const Navbar = ({ setList, list }: Props): JSX.Element => {
+  const { user } = useUser();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<boolean>(false);
 
-  const user = true;
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      toast.success("User logged out successfully");
+    } catch (error) {
+      console.error("Logout error:", error?.message);
+    }
+  };
+
+  if (!user) {
+    return navigate("/login");
+  }
 
   return (
     <div className="bg-transparent w-full flex items-center justify-between px-6 py-2">
@@ -27,7 +46,13 @@ const Navbar = ({ setList }: Props) => {
             className="flex items-center justify-center gap-1 hover:scale-105 transition-all cursor-pointer"
           >
             <CiGrid2H />
-            <h5 className="text-sm font-semibold text-slate-600 hover:text-black">List</h5>
+            <h5
+              className={`text-sm font-semibold ${
+                !list ? "text-slate-600" : "text-red-700"
+              } hover:text-black`}
+            >
+              List
+            </h5>
           </div>
 
           <div
@@ -35,7 +60,13 @@ const Navbar = ({ setList }: Props) => {
             className="flex items-center justify-center gap-1 hover:scale-105 transition-all cursor-pointer"
           >
             <CiGrid41 />
-            <h4 className="text-sm font-semibold text-slate-600 hover:text-black">Board</h4>
+            <h4
+              className={`${
+                list ? "text-slate-600" : "text-red-700"
+              } text-sm font-semibold text-slate-600 hover:text-black`}
+            >
+              Board
+            </h4>
           </div>
         </div>
       </div>
@@ -45,14 +76,19 @@ const Navbar = ({ setList }: Props) => {
           <div className="flex items-center gap-2">
             <img
               className="w-9 h-9 rounded-full"
-              src="/profile.png"
+              src={"/profile.png"}
               alt="profile"
               onClick={() => setProfile((prev) => !prev)}
             />
-            <p className="font-semibold text-slate-600">username</p>
+            <p className="font-semibold text-slate-600">
+              {user?.displayName?.split(" ")[0]}
+            </p>
           </div>
           {profile && (
-            <button className="flex items-center gap-1 text-sm border font-semibold  border-slate-400 px-3 py-2 rounded-lg bg-rose-50 hover:shadow-md hover:bg-red-100">
+            <button
+              onClick={logout}
+              className="flex items-center gap-1 text-sm border font-semibold  border-slate-400 px-3 py-2 rounded-lg bg-blue-50 hover:shadow-md hover:scale-110 transition-all hover:bg-blue-100"
+            >
               <span>
                 <RiLogoutBoxLine />
               </span>
@@ -62,8 +98,12 @@ const Navbar = ({ setList }: Props) => {
         </div>
       ) : (
         <div className="flex items-center justify-between gap-4">
-          <button>Login</button>
-          <button>Signup</button>
+          <button
+            onClick={() => navigate("/login")}
+            className="border px-5 font-semibold py-2 rounded-full bg-black text-white hover:text-black hover:bg-blue-100 hover:shadow-md"
+          >
+            Login
+          </button>
         </div>
       )}
     </div>

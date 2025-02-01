@@ -1,6 +1,10 @@
 import { CiSearch } from "react-icons/ci";
 
-const HomeMenu = () => {
+type Props = {
+  setAddTask: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const HomeMenu = ({ setAddTask }: Props) => {
   return (
     <div className="flex items-center w-full justify-between px-6 mt-1">
       <div className="flex items-center gap-2">
@@ -10,7 +14,7 @@ const HomeMenu = () => {
           id=""
           className=" border-slate-400 border-2 hover:border-black hover:bg-slate-100 text-sm py-1 hover:text-black text-slate-500 px-2  rounded-full"
         >
-          <option disabled value="">
+          <option value="">
             Category
           </option>
           <option value="work">Work</option>
@@ -22,7 +26,7 @@ const HomeMenu = () => {
           id=""
           className=" border-slate-400 border-2 hover:bg-slate-100 hover:text-black hover:border-black text-slate-500 px-2 text-sm py-1 rounded-full"
         >
-          <option disabled value="">
+          <option value="">
             Due Date
           </option>
           <option value="ascending">Ascending</option>
@@ -39,7 +43,10 @@ const HomeMenu = () => {
             className="border-none h-full bg-transparent "
           />
         </div>
-        <button className="text-sm font-medium text-white bg-purple-800 px-3 rounded-2xl py-2">
+        <button
+          onClick={() => setAddTask((prev) => !prev)}
+          className="text-sm font-medium text-white bg-purple-600 hover:bg-purple-800 hover:shadow-lg px-3 rounded-2xl py-2"
+        >
           ADD TASK
         </button>
       </div>

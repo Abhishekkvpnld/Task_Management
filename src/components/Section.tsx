@@ -6,9 +6,12 @@ type Props = {
   addTask: boolean;
   data: object[];
   title: string;
+  setDelete: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const Section = ({ bgColor, addTask, data, title }: Props) => {
+const Section = ({ bgColor, addTask, data, title,setDelete}: Props) => {
+
+  
   return (
     <div className="bg-slate-100 max-w-[90%] rounded-lg w-full min-h-40 mt-8 flex flex-col shadow-sm">
       <div
@@ -25,9 +28,11 @@ const Section = ({ bgColor, addTask, data, title }: Props) => {
         </div>
       )}
 
-      <div className="flex flex-col w-full">
-        <ListCard />
-      </div>
+      {data?.map((dc) => (
+        <div key={dc?.id} className="flex flex-col w-full">
+          <ListCard setDelete={setDelete} data={dc}/>
+        </div>
+      ))}
     </div>
   );
 };
