@@ -37,8 +37,6 @@ const HomeMenu = ({
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          name=""
-          id=""
           className="text-xs md:text-sm border-slate-400 border-2 hover:bg-slate-100 hover:text-black hover:border-black text-slate-500 px-2 py-1 rounded-full"
         >
           <option value="">Due Date</option>

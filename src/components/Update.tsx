@@ -4,6 +4,7 @@ import { database } from "../firebase/config";
 import { useNavigate, useParams } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
 import toast from "react-hot-toast";
+import { useUser } from "../context/userContext";
 
 type Data = {
   title: string;
@@ -19,6 +20,7 @@ const Update = () => {
   const params = useParams();
   const docId: string | undefined = params.id;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { user } = useUser();
 
   const [data, setData] = useState<Data | null>(null);
   const [task, setTask] = useState<Data>({
@@ -38,7 +40,6 @@ const Update = () => {
 
       if (docSnap.exists()) {
         const taskData = docSnap.data() as Data;
-        console.log("Document data:", taskData);
         setData(taskData);
       } else {
         console.log("No such document!");
@@ -54,7 +55,6 @@ const Update = () => {
     }
   }, [docId]);
 
-
   useEffect(() => {
     if (data) {
       setTask(data);
@@ -62,7 +62,11 @@ const Update = () => {
   }, [data]);
 
   // Handle Input Change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
     setTask((prevTask) => ({
       ...prevTask,
@@ -70,6 +74,11 @@ const Update = () => {
     }));
   };
 
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,11 +89,11 @@ const Update = () => {
       const docRef = doc(database, "task", docId);
       await updateDoc(docRef, task);
       console.log("Document successfully updated!");
-      toast.success("Task updated successfuly")
+      toast.success("Task updated successfuly");
 
       navigate("/");
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
       console.error("Error updating document:", error);
     } finally {
       setLoading(false);
@@ -92,11 +101,18 @@ const Update = () => {
   };
 
   return (
-    <div className="min-w-[100vw] flex items-center justify-center absolute h-full bg-white bg-opacity-10">
-      <form onSubmit={handleUpdate} className="border shadow-lg mt-11 w-[50%] rounded-2xl bg-white p-4">
+    <div className="min-w-[100vw] flex items-center justify-center absolute min-h-[100vh] bg-white bg-opacity-70">
+      <form
+        onSubmit={handleUpdate}
+        className="border shadow-lg mt-11 w-[80%]  md:w-[60%] lg:w-[50%] rounded-2xl bg-white p-4"
+      >
         <div className="w-full flex items-center justify-between h-10">
           <h1 className="text-xl font-semibold">Update Your Task</h1>
-          <HiHome onClick={() => navigate("/")} className="hover:scale-125 cursor-pointer transition-all" title="home" />
+          <HiHome
+            onClick={() => navigate("/")}
+            className="hover:scale-125 cursor-pointer transition-all"
+            title="home"
+          />
         </div>
 
         <hr className="w-full mt-2 border" />
@@ -119,21 +135,35 @@ const Update = () => {
           />
         </div>
 
-        <div className="flex items-center justify-between mt-5">
+        <div className="flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between mt-5 px-4">
           <div className="flex flex-col gap-2">
-            <h6 className="text-sm font-semibold text-slate-500">Task Category</h6>
-            <div className="flex items-center gap-4">
+            <h6 className="text-sm font-semibold text-slate-500">
+              Task Category
+            </h6>
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                className={`border px-8 py-2 rounded-full ${task.category === "Work" ? "bg-blue-500 text-white" : "hover:bg-blue-100"}`}
-                onClick={() => setTask((prev) => ({ ...prev, category: "Work" }))}
+                className={`text-xs lg:text-sm border px-4 lg:px-8 py-2 rounded-full ${
+                  task.category === "Work"
+                    ? "bg-blue-500 text-white"
+                    : "hover:bg-blue-100"
+                }`}
+                onClick={() =>
+                  setTask((prev) => ({ ...prev, category: "Work" }))
+                }
               >
                 Work
               </button>
               <button
                 type="button"
-                className={`border px-8 py-2 rounded-full ${task.category === "Personal" ? "bg-blue-500 text-white" : "hover:bg-blue-100"}`}
-                onClick={() => setTask((prev) => ({ ...prev, category: "Personal" }))}
+                className={`text-xs lg:text-sm border px-4 lg:px-8 py-2 rounded-full ${
+                  task.category === "Personal"
+                    ? "bg-blue-500 text-white"
+                    : "hover:bg-blue-100"
+                }`}
+                onClick={() =>
+                  setTask((prev) => ({ ...prev, category: "Personal" }))
+                }
               >
                 Personal
               </button>
@@ -148,17 +178,19 @@ const Update = () => {
                 name="dueDate"
                 value={task.dueDate}
                 onChange={handleChange}
-                className="border border-slate-400 px-2 rounded-lg py-1 text-slate-500"
+                className="text-xs lg:text-sm border border-slate-400 px-2 rounded-lg py-1 text-slate-500"
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <h6 className="text-sm font-semibold text-slate-500">Task Status*</h6>
+              <h6 className="text-sm font-semibold text-slate-500">
+                Task Status*
+              </h6>
               <select
                 name="status"
                 value={task.status}
                 onChange={handleChange}
-                className="border border-slate-400 px-2 py-1 rounded-lg text-slate-500"
+                className="border text-xs lg:*:text-sm border-slate-400 px-2 py-1 rounded-lg text-slate-500"
               >
                 <option value="todo">TO-DO</option>
                 <option value="inprogress">IN-PROGRESS</option>
@@ -175,14 +207,19 @@ const Update = () => {
             onClick={() => fileInputRef.current?.click()}
             className="w-[90%] py-2 border-2 text-slate-500 font-semibold hover:underline border-slate-200 rounded-lg"
           >
-            Drop your file here or <span className="underline text-blue-600">Update</span>
+            Drop your file here or{" "}
+            <span className="underline text-blue-600">Update</span>
           </button>
           <input type="file" ref={fileInputRef} className="hidden" />
         </div>
 
         {task.attachment && (
           <div className="mx-5 my-5">
-            <img className="w-32 h-32 border p-2" src={task.attachment} alt="prev" />
+            <img
+              className="w-32 h-32 border p-2"
+              src={task.attachment}
+              alt="prev"
+            />
           </div>
         )}
 

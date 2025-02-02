@@ -7,46 +7,48 @@ import { deleteDoc, doc } from "firebase/firestore";
 import toast from "react-hot-toast";
 
 type Props = {
-data:{
+  data: {
     id: string;
-  title: string;
-  description: string;
-  category: string;
-  dueDate: string;
-  status: string;
-  attachment: string;
-}
-  setDelete: React.Dispatch<React.SetStateAction<boolean>>
+    description: string;
+    category: string;
+    dueDate: string;
+    status: string;
+    attachment: string;
+  };
+  setDelete: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const BoardCard = ({ data,setDelete}: Props) => {
+const BoardCard = ({ data, setDelete }: Props) => {
   const [opt, setOpt] = useState(false);
   const navigate = useNavigate();
 
-
-  const handleDelete = async (docId:string) => {
+  const handleDelete = async (docId: string) => {
     if (!docId) return;
 
-    const confirmDelete = window.confirm("Are you sure you want to delete this task?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this task?"
+    );
     if (!confirmDelete) return;
 
     try {
       const docRef = doc(database, "task", docId);
       await deleteDoc(docRef);
       console.log("Document successfully deleted!");
-      setDelete((prev)=>!prev)
-      toast.success("Document successfully deleted!")
+      setDelete((prev) => !prev);
+      toast.success("Document successfully deleted!");
       navigate("/");
     } catch (error) {
       console.error("Error deleting document:", error);
-      toast.error(error?.message)
+      toast.error(error?.message);
     }
   };
 
-
-
   return (
-    <div className="w-full rounded-lg min-h-28 bg-white mt-4 flex flex-col justify-between p-3">
+    <div
+      draggable
+      onDragStart={(e) => e.dataTransfer.setData("taskId", data?.id)}
+      className="w-full rounded-lg min-h-28 bg-white mt-4 flex flex-col justify-between p-3"
+    >
       <div className="flex items-center justify-between">
         <div>{data?.title}</div>
         <div
@@ -65,7 +67,10 @@ const BoardCard = ({ data,setDelete}: Props) => {
               >
                 <RiEdit2Fill size={15} /> Edit
               </button>
-              <button onClick={()=>handleDelete(data?.id)} className="text-xs flex items-center hover:text-red-600 justify-center hover:scale-105 transition-all gap-3">
+              <button
+                onClick={() => handleDelete(data?.id)}
+                className="text-xs flex items-center hover:text-red-600 justify-center hover:scale-105 transition-all gap-3"
+              >
                 <RiDeleteBin5Line size={15} /> Delete
               </button>
             </div>

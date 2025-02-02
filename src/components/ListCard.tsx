@@ -66,7 +66,11 @@ const ListCard = ({ data, setDelete, title }: Props) => {
   };
 
   return (
-    <div className="grid grid-cols-[2fr,1fr,1fr] md:grid-cols-[2fr,2fr,2fr,2fr,1fr] hover:shadow-lg hover:bg-white gap-1 items-center px-2 border-b border-slate-300 py-2 w-full">
+    <div
+      draggable
+      onDragStart={(e) => e.dataTransfer.setData("taskId", data?.id)}
+      className="grid grid-cols-[2fr,1fr,1fr] md:grid-cols-[2fr,2fr,2fr,2fr,1fr] hover:shadow-lg hover:bg-white gap-1 items-center px-2 border-b border-slate-300 py-2 w-full"
+    >
       {/* Title Section */}
       <div className="flex text-xs items-center gap-1 w-full">
         <MdOutlineCheckBoxOutlineBlank size={20} className="text-slate-400" />

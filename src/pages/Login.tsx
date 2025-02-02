@@ -3,9 +3,12 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
+import { useUser } from "../context/userContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { user } = useUser();
 
   const handleGoogle = async () => {
     const provider = new GoogleAuthProvider();
@@ -18,6 +21,12 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
   return (
     <div className="w-[100vw] flex-col  gap-11 md:gap-0 overflow-hidden md:flex-row flex items-center justify-between h-[100vh] bg-[#FFF9F9] p-6">
       <div className="flex-1 h-full flex flex-col justify-center gap-5 max-w-[80%] md:max-w-[30%] px-6">
@@ -29,8 +38,9 @@ const Login = () => {
             TaskBuddy
           </h1>
           <p className="text-xs">
-            Lorem ipsum dolor Aspernatur Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vero eaque non odio maiores quam,ipsum!
-            illum nesciunt{" "}
+            Lorem ipsum dolor Aspernatur Lorem ipsum dolor, sit amet consectetur
+            adipisicing elit. Vero eaque non odio maiores quam,ipsum! illum
+            nesciunt{" "}
           </p>
         </div>
         <button
@@ -49,7 +59,11 @@ const Login = () => {
             <div className="w-36 h-36 md:w-60 md:h-60 border rounded-full border-[#800080] "></div>
           </div>
         </div>
-        <img src="/homeImg.png"  className=" hidden  md:block absolute ml-40 w-96 h-96" alt="" />
+        <img
+          src="/homeImg.png"
+          className=" hidden  md:block absolute ml-40 w-96 h-96"
+          alt=""
+        />
       </div>
     </div>
   );

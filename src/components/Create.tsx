@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { CgClose } from "react-icons/cg";
 import { database } from "../firebase/config";
@@ -12,7 +12,7 @@ type Props = {
   setCreate: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Create = ({ setAddTask, setCreate }: Props) => {
+const Create = ({ setAddTask, setCreate }: Props):JSX.Element => {
 
   const navigate = useNavigate();
    const { user } = useUser();
@@ -94,13 +94,15 @@ const Create = ({ setAddTask, setCreate }: Props) => {
     }
   };
 
-  if (!user) {
-    return navigate("/login");
-  }
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
 
   return (
-    <div className="min-w-[100vw] flex items-center justify-center absolute min-h-[100vh] bg-white bg-opacity-70">
+    <div className="min-w-[100vw] flex items-center justify-center fixed min-h-[100vh] bg-white bg-opacity-70">
       <form
         className="border shadow-lg mt-11 w-[80%]  md:w-[60%] lg:w-[50%] rounded-2xl bg-white p-4"
         onSubmit={handleSubmit}
@@ -140,7 +142,7 @@ const Create = ({ setAddTask, setCreate }: Props) => {
             <h6 className="text-sm font-semibold text-slate-500">
               Task Category
             </h6>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               {["Work", "Personal"].map((cat) => (
                 <button
                   key={cat}
