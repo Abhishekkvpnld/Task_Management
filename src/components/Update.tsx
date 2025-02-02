@@ -175,7 +175,7 @@ const Update = () => {
             onClick={() => fileInputRef.current?.click()}
             className="w-[90%] py-2 border-2 text-slate-500 font-semibold hover:underline border-slate-200 rounded-lg"
           >
-            Drop your file here
+            Drop your file here or <span className="underline text-blue-600">Update</span>
           </button>
           <input type="file" ref={fileInputRef} className="hidden" />
         </div>

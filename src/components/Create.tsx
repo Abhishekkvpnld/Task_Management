@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { CgClose } from "react-icons/cg";
 import { database } from "../firebase/config";
 import { addDoc, collection } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/userContext";
 
 type Props = {
   setAddTask: React.Dispatch<React.SetStateAction<boolean>>;
@@ -11,6 +13,9 @@ type Props = {
 };
 
 const Create = ({ setAddTask, setCreate }: Props) => {
+
+  const navigate = useNavigate();
+   const { user } = useUser();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [task, setTask] = useState({
     title: "",
@@ -89,10 +94,15 @@ const Create = ({ setAddTask, setCreate }: Props) => {
     }
   };
 
+  if (!user) {
+    return navigate("/login");
+  }
+
+
   return (
-    <div className="min-w-[100vw] flex items-center justify-center absolute h-full bg-white bg-opacity-70">
+    <div className="min-w-[100vw] flex items-center justify-center absolute min-h-[100vh] bg-white bg-opacity-70">
       <form
-        className="border shadow-lg mt-11 w-[50%] rounded-2xl bg-white p-4"
+        className="border shadow-lg mt-11 w-[80%]  md:w-[60%] lg:w-[50%] rounded-2xl bg-white p-4"
         onSubmit={handleSubmit}
       >
         <div className="w-full flex items-center justify-between h-10">
@@ -125,7 +135,7 @@ const Create = ({ setAddTask, setCreate }: Props) => {
           />
         </div>
 
-        <div className="flex items-center justify-between mt-5">
+        <div className="flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between mt-5 px-4">
           <div className="flex flex-col gap-2">
             <h6 className="text-sm font-semibold text-slate-500">
               Task Category
@@ -134,7 +144,7 @@ const Create = ({ setAddTask, setCreate }: Props) => {
               {["Work", "Personal"].map((cat) => (
                 <button
                   key={cat}
-                  className={`border px-8 py-2 rounded-full ${
+                  className={`text-xs lg:text-sm border px-4 lg:px-8 py-2 rounded-full ${
                     task.category === cat
                       ? "bg-blue-500 text-white"
                       : "hover:bg-blue-100"
@@ -155,7 +165,7 @@ const Create = ({ setAddTask, setCreate }: Props) => {
               <h6 className="text-sm font-semibold text-slate-500">Due on*</h6>
               <input
                 type="date"
-                className="border border-slate-400 px-2 rounded-lg py-1 text-slate-500"
+                className="text-xs lg:text-sm border border-slate-400 px-2 rounded-lg py-1 text-slate-500"
                 value={task.dueDate}
                 onChange={(e) => setTask({ ...task, dueDate: e.target.value })}
               />
@@ -166,7 +176,7 @@ const Create = ({ setAddTask, setCreate }: Props) => {
                 Task Status*
               </h6>
               <select
-                className="border border-slate-400 px-2 py-1 rounded-lg text-slate-500"
+                className="border text-xs lg:*:text-sm border-slate-400 px-2 py-1 rounded-lg text-slate-500"
                 value={task.status}
                 onChange={(e) => setTask({ ...task, status: e.target.value })}
               >
@@ -187,7 +197,7 @@ const Create = ({ setAddTask, setCreate }: Props) => {
           >
             {task.attachment
               ? `Selected File: Task File`
-              : "Drop your file here"}
+              : `Drop your file here`}
           </button>
           <input
             type="file"

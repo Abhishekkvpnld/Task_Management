@@ -17,7 +17,7 @@ const SectionBoard = ({ title, bgColor, data,setDelete }: Props) => {
 
   {
     data?.map((dc)=>(
-      <BoardCard setDelete={setDelete} data={dc}  key={dc?.id}/>
+      <BoardCard title={title} setDelete={setDelete} data={dc}  key={dc?.id}/>
     ))
   }
     </div>

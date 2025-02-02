@@ -28,9 +28,6 @@ const Navbar = ({ setList, list }: Props): JSX.Element => {
     }
   };
 
-  if (!user) {
-    return navigate("/login");
-  }
 
   return (
     <div className="bg-transparent w-full flex items-center justify-between px-6 py-2">
@@ -40,7 +37,7 @@ const Navbar = ({ setList, list }: Props): JSX.Element => {
           <h1 className="font-semibold text-lg"> TaskBuddy</h1>
         </div>
 
-        <div className="flex items-center justify-between gap-3 text-[#2F2F2F]">
+        <div className="hidden md:flex items-center justify-between gap-3 text-[#2F2F2F]">
           <div
             onClick={() => setList(true)}
             className="flex items-center justify-center gap-1 hover:scale-105 transition-all cursor-pointer"
@@ -80,7 +77,7 @@ const Navbar = ({ setList, list }: Props): JSX.Element => {
               alt="profile"
               onClick={() => setProfile((prev) => !prev)}
             />
-            <p className="font-semibold text-slate-600">
+            <p className="font-semibold text-xs md:text-sm text-slate-600">
               {user?.displayName?.split(" ")[0]}
             </p>
           </div>

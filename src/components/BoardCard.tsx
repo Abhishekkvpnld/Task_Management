@@ -7,22 +7,24 @@ import { deleteDoc, doc } from "firebase/firestore";
 import toast from "react-hot-toast";
 
 type Props = {
-  id: string;
+data:{
+    id: string;
   title: string;
   description: string;
   category: string;
   dueDate: string;
   status: string;
   attachment: string;
+}
   setDelete: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const BoardCard = ({ data,setDelete }: Props) => {
+const BoardCard = ({ data,setDelete}: Props) => {
   const [opt, setOpt] = useState(false);
   const navigate = useNavigate();
 
 
-  const handleDelete = async (docId) => {
+  const handleDelete = async (docId:string) => {
     if (!docId) return;
 
     const confirmDelete = window.confirm("Are you sure you want to delete this task?");
