@@ -17,7 +17,11 @@ const Login = () => {
       navigate("/");
       toast.success("Logged In Successfully...✅");
     } catch (error) {
-      console.error("Login Error:", error?.message);
+      if (error instanceof Error) {
+        console.error("Login Error:", error.message);
+      } else {
+        console.error("Login Error: Unknown error");
+      }
     }
   };
 

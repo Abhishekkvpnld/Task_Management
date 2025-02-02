@@ -24,7 +24,7 @@ const Navbar = ({ setList, list }: Props): JSX.Element => {
       await signOut(auth);
       toast.success("User logged out successfully");
     } catch (error) {
-      console.error("Logout error:", error?.message);
+      console.error("Logout error:", (error as Error).message);
     }
   };
 

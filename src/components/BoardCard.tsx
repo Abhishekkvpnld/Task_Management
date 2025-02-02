@@ -10,6 +10,7 @@ type Props = {
   data: {
     id: string;
     description: string;
+    title: string;
     category: string;
     dueDate: string;
     status: string;
@@ -39,7 +40,7 @@ const BoardCard = ({ data, setDelete }: Props) => {
       navigate("/");
     } catch (error) {
       console.error("Error deleting document:", error);
-      toast.error(error?.message);
+      toast.error((error as Error).message);
     }
   };
 

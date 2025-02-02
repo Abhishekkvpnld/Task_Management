@@ -7,7 +7,7 @@ import { RiEdit2Fill } from "react-icons/ri";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import { database } from "../firebase/config";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { useDeleteDocument } from "../api/useFirebaseApi";
 

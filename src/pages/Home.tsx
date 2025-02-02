@@ -12,6 +12,17 @@ import toast from "react-hot-toast";
 import { useUpdateDocument } from "../api/useFirebaseApi";
 
 type Data = {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  dueDate: string;
+  status: string;
+  attachment: string;
+};
+
+type Task = {
+  id: string;
   title: string;
   description: string;
   category: string;
@@ -25,15 +36,17 @@ const Home = () => {
   const { user } = useUser();
   const [list, setList] = useState<boolean>(true);
   const [addTask, setAddTask] = useState<boolean>(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Task[]>([]);
   const [deleteDoc, setDeleteDoc] = useState<boolean>(false);
   const [create, setCreate] = useState<boolean>(false);
 
   const [category, setCategory] = useState("");
   const [filter, setFilter] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
+  const [filteredData, setFilteredData] = useState<Task[]>([]);
   const [search, setSearch] = useState("");
   const [drop, setDrop] = useState(false);
+
+  console.log(data, "✅✅✅✅✅");
 
   const { mutate: updateTaskStatus } = useUpdateDocument("task");
 
@@ -44,12 +57,12 @@ const Home = () => {
       { id: taskId, data: { status: newStatus } },
       {
         onSuccess: () => {
-          setDrop((prev) => !prev); // Assuming you want to toggle state here
+          setDrop((prev) => !prev);
           console.log("Document successfully updated!");
           toast.success("Task updated successfully");
         },
         onError: (error: unknown) => {
-          toast.error(error?.message || "Error updating task.");
+          toast.error((error as Error).message || "Error updating task.");
           console.error("Error updating document:", error);
         },
       }
@@ -72,13 +85,13 @@ const Home = () => {
       try {
         const dbCollection = collection(database, "task");
         const res = await getDocs(dbCollection);
-        const fetchData = res?.docs?.map((doc) => ({
+        const fetchData: Task[] = res?.docs?.map((doc) => ({
           ...doc.data(),
           id: doc.id,
-        }));
+        })) as Task[];
         setData(fetchData);
       } catch (error: unknown) {
-        console.log(error?.message);
+        console.log((error as Error).message);
       }
     };
     getData();
@@ -88,11 +101,11 @@ const Home = () => {
     let updatedData = [...data];
 
     if (category) {
-      updatedData = updatedData.filter((dc) => dc?.category === category);
+      updatedData = updatedData.filter((dc: Data) => dc?.category === category);
     }
 
     if (filter) {
-      updatedData.sort((a, b) => {
+      updatedData.sort((a: Data, b: Data) => {
         const dateA = new Date(a.dueDate).getTime();
         const dateB = new Date(b.dueDate).getTime();
         return filter === "ascending" ? dateA - dateB : dateB - dateA;

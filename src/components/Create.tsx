@@ -2,8 +2,6 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { CgClose } from "react-icons/cg";
-import { database } from "../firebase/config";
-import { addDoc, collection } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/userContext";
 import { useAddDocument } from "../api/useFirebaseApi";
@@ -89,7 +87,7 @@ const Create = ({ setAddTask, setCreate }: Props):JSX.Element => {
         toast.success("Task Created Successfully!");
       },
       onError: (error: unknown) => {
-        toast.error(error?.message || "Failed to create task.");
+        toast.error((error as Error).message || "Failed to create task.");
       },
     });
   };

@@ -69,7 +69,7 @@ const Section = ({
 
       {data?.map((dc) => (
         <div key={dc?.id} className="flex flex-col w-full">
-          <ListCard title={title} setDelete={setDelete} data={dc} />
+          <ListCard key={dc?.id} title={title} setDelete={setDelete} data={dc} />
         </div>
       ))}
     </div>

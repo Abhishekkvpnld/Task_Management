@@ -96,7 +96,11 @@ const Update = () => {
           navigate("/");
         },
         onError: (error: unknown) => {
-          toast.error(error?.message || "Error updating document.");
+          if (error instanceof Error) {
+            toast.error(error.message || "Error updating document.");
+          } else {
+            toast.error("Error updating document.");
+          }
         },
       }
     );
