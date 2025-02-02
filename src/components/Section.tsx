@@ -48,7 +48,7 @@ const Section = ({
           handleDrop(taskId, status.toLowerCase());
         }
       }}
-      className="bg-slate-100 max-w-[90%] rounded-lg w-full min-h-40 mt-8 flex flex-col shadow-sm"
+      className="bg-slate-100 max-w-[90%] rounded-lg w-full min-h-40 mt-3 flex flex-col shadow-sm"
     >
       <div
         className={`w-full ${bgColor} rounded-t-lg px-4 font-semibold text-sm py-1`}

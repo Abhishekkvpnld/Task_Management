@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { database } from "../firebase/config";
 import { useNavigate, useParams } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
 import toast from "react-hot-toast";
 import { useUser } from "../context/userContext";
+import { useUpdateDocument } from "../api/useFirebaseApi";
 
 type Data = {
   title: string;
@@ -31,7 +32,6 @@ const Update = () => {
     status: "todo",
     attachment: "",
   });
-  const [loading, setLoading] = useState(false);
 
   const fetchDataById = async (docId: string) => {
     try {
@@ -80,24 +80,26 @@ const Update = () => {
     }
   }, [user, navigate]);
 
-  const handleUpdate = async (e: React.FormEvent) => {
+  //Update Task
+  const { mutate: updateDocument, isPending: loading } =
+    useUpdateDocument("task");
+
+  const handleUpdate = (e: React.FormEvent) => {
     e.preventDefault();
     if (!docId) return;
 
-    setLoading(true);
-    try {
-      const docRef = doc(database, "task", docId);
-      await updateDoc(docRef, task);
-      console.log("Document successfully updated!");
-      toast.success("Task updated successfuly");
-
-      navigate("/");
-    } catch (error) {
-      toast.error(error.message);
-      console.error("Error updating document:", error);
-    } finally {
-      setLoading(false);
-    }
+    updateDocument(
+      { id: docId, data: task },
+      {
+        onSuccess: () => {
+          toast.success("Task updated successfully!");
+          navigate("/");
+        },
+        onError: (error: unknown) => {
+          toast.error(error?.message || "Error updating document.");
+        },
+      }
+    );
   };
 
   return (

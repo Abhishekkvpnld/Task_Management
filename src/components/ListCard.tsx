@@ -9,17 +9,23 @@ import { useNavigate } from "react-router-dom";
 import { database } from "../firebase/config";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
+import { useDeleteDocument } from "../api/useFirebaseApi";
 
-type Props = {
-  data: {
-    id: string;
+
+type Data = {
+  
+   id: string;
     title: string;
     description: string;
     category: string;
     dueDate: string;
     status: string;
     attachment: string;
-  };
+  
+}
+
+type Props = {
+  data:Data
   setDelete: React.Dispatch<React.SetStateAction<boolean>>;
   title?: string;
 };
@@ -44,26 +50,8 @@ const ListCard = ({ data, setDelete, title }: Props) => {
     await updateTask(taskId, { status: value });
   };
 
-  const handleDelete = async (docId: string) => {
-    if (!docId) return;
-
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this task?"
-    );
-    if (!confirmDelete) return;
-
-    try {
-      const docRef = doc(database, "task", docId);
-      await deleteDoc(docRef);
-      console.log("Document successfully deleted!");
-      setDelete((prev) => !prev);
-      toast.success("Document successfully deleted!");
-      navigate("/");
-    } catch (error) {
-      console.error("Error deleting document:", error);
-      toast.error(error?.message);
-    }
-  };
+  //Delete Task
+  const deleteTask = useDeleteDocument("task");
 
   return (
     <div
@@ -128,7 +116,7 @@ const ListCard = ({ data, setDelete, title }: Props) => {
               <RiEdit2Fill size={15} /> Edit
             </button>
             <button
-              onClick={() => handleDelete(data?.id)}
+              onClick={() => deleteTask.mutate(data?.id)}
               className="text-xs flex items-center hover:text-red-600 justify-center hover:scale-105 transition-all gap-3"
             >
               <RiDeleteBin5Line size={15} /> Delete

@@ -6,6 +6,7 @@ import { database } from "../firebase/config";
 import { addDoc, collection } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/userContext";
+import { useAddDocument } from "../api/useFirebaseApi";
 
 type Props = {
   setAddTask: React.Dispatch<React.SetStateAction<boolean>>;
@@ -63,35 +64,34 @@ const Create = ({ setAddTask, setCreate }: Props):JSX.Element => {
     setTask((prev) => ({ ...prev, category }));
   };
 
+  //Add Task
+  const { mutate: addDocument } = useAddDocument("task");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (
-      !task.category ||
-      !task.description ||
-      !task.dueDate ||
-      !task.status ||
-      !task.title
-    ) {
+    
+    if (!task.category || !task.description || !task.dueDate || !task.status || !task.title) {
       return toast.error("Please Provide All Details");
     }
-
-    try {
-      const dbCollection = collection(database, "task");
-      await addDoc(dbCollection, task);
-      setCreate(prev=>!prev)
-      setTask({
-        title: "",
-        description: "",
-        category: "Work",
-        dueDate: "",
-        status: "",
-        attachment: "",
-      });
-      setAddTask(false);
-      toast.success("Task Created Successfully");
-    } catch (error: unknown) {
-      toast.error(error?.message);
-    }
+  
+    addDocument(task, {
+      onSuccess: () => {
+        setCreate((prev) => !prev);
+        setTask({
+          title: "",
+          description: "",
+          category: "Work",
+          dueDate: "",
+          status: "",
+          attachment: "",
+        });
+        setAddTask(false);
+        toast.success("Task Created Successfully!");
+      },
+      onError: (error: unknown) => {
+        toast.error(error?.message || "Failed to create task.");
+      },
+    });
   };
 
   useEffect(() => {

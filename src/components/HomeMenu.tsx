@@ -21,7 +21,7 @@ const HomeMenu = ({
   setSearch,
 }: Props) => {
   return (
-    <div className="flex flex-col gap-2 md:gap-0 items-start md:flex-row md:items-center w-full md:justify-between px-6 mt-1">
+    <div className="flex flex-col gap-2 md:gap-0 items-center md:flex-row md:items-center w-full md:justify-between px-6 mt-1">
       <div className="flex items-center gap-2">
         <h6 className="text-sm text-slate-500">Filter by:</h6>
         <select
@@ -62,7 +62,7 @@ const HomeMenu = ({
         </div>
         <button
           onClick={() => setAddTask((prev) => !prev)}
-          className="text-xs md:text-sm font-medium text-white bg-purple-600 hover:bg-purple-800 hover:shadow-lg px-2 md:px-3 rounded-2xl py-1 md:py-2"
+          className="text-xs md:text-sm font-medium text-white bg-purple-700 hover:bg-purple-800 hover:shadow-lg px-2 md:px-3 rounded-2xl py-1 md:py-2"
         >
           ADD TASK
         </button>
